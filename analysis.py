@@ -43,12 +43,9 @@ eda_Options = ["select a Question",
                "15. Rice vs. Wheat Yield Across States"
                ]
 
-sql_Options = ["select a Question",
-               "1. Year-wise Trend of Rice Production Across States (Top 3)"
-               ]
+
 st.sidebar.image(r"C:\Users\Python Class\Agridata_Project2\crop1.jpeg")
 sel_option = st.sidebar.selectbox("EDA QUESTIONS",eda_Options,index=0) 
-sel1_option = st.sidebar.selectbox("SQL QUESTIONS",sql_Options,index=0) 
 
 #1
 if sel_option == "1. Top 7 RICE PRODUCTION State Data":
@@ -364,22 +361,3 @@ if sel_option == "15. Rice vs. Wheat Yield Across States":
     )
     st.plotly_chart(fig, use_container_width=True)
 
-#SQL QUES
-#1
-if sel1_option == "1. Year-wise Trend of Rice Production Across States (Top 3)":
-    mycursor.execute("""
-    WITH Top_States AS (
-    SELECT state_name 
-    FROM Crops_Data
-    GROUP BY state_name
-    ORDER BY SUM(rice_production) DESC
-    LIMIT 3
-    )
-    SELECT A.year, A.state_name, SUM(A.rice_production) AS rice_production
-    FROM Crops_Data A
-    JOIN Top_States B ON A.state_name = B.state_name
-    GROUP BY A.year, A.state_name
-    ORDER BY A.year, rice_production DESC""") 
-    result = mycursor.fetchall()
-    # Convert to DataFrame
-    df = pd.DataFrame(result, columns=["year","state_name","rice_production"])
